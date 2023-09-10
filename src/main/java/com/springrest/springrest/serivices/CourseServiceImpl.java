@@ -3,62 +3,43 @@ package com.springrest.springrest.serivices;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springrest.springrest.dao.CourseDao;
 import com.springrest.springrest.entities.Course;
 
 @Service
 public class CourseServiceImpl implements CourseService {
-
-	List<Course> list;
-
-	public CourseServiceImpl() {
-		list = new ArrayList<>();
-		list.add(new Course(1, "java Course",
-				"Get mentorship by experts                                                                                                                                                                                                                   "));
-		list.add(new Course(1, "python Course",
-				"Get mentorship by experts                                                                                                                                                                                                                     "));
-		list.add(new Course(1, "C++ Course",
-				"Get mentorship by experts                                                                                                                                                                                                                     "));
-		list.add(new Course(1, "Sql Course",
-				"Get mentorship by experts                                                                                                                                                                                                                      "));
-		list.add(new Course(1, "DSA Course",
-				"Get mentorship by experts                                                                                                                                                                                                                      "));
-	}
+	@Autowired
+	private CourseDao courseDao;
 
 	@Override
 	public List<Course> getCourses() {
-
-		return list;
+		return courseDao.findAll();
 	}
 
 	@Override
 	public Course getCourse(long courseId) {
-
-		// eek course return kr dena yaha se
-		// TODO Auto-generated method stub
-		return null;
+		return courseDao.getOne(courseId);
 	}
 
 	@Override
 	public Course addCourse(Course course) {
-		list.add(course);
+		courseDao.save(course);
 		return course;
 	}
 
 	@Override
 	public Course updateCourse(Course course) {
-		list.forEach(e -> {
-			if (e.getId() == course.getId()) {
-				e.setTitle(course.getTitle());
-				e.setDescription(course.getDescription());
-			}
-		});
-		return null;
+		courseDao.save(course);
+		return course;
 	}
 
 	@Override
 	public void deleteCourse(long parseLong) {
+		Course entity = courseDao.getOne(parseLong);
+		courseDao.delete(entity);
 
 	}
 
